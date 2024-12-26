@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var mySqlDao = require('./mySqlDao')
+var myMongoDao = require('./mongoDao')
 var bodyParser = require('body-parser')
 
 app.set('view engine', 'ejs');
@@ -42,5 +43,16 @@ app.get("/grades", (req, res)=> {
     .catch((error)=>{
         console.log("CATCH index.js")
         res.send(error);
+    })
+})
+
+//Getting all the lectureres for this program
+app.get("/lecturers", (req,res)=>{
+    myMongoDao.findAll()
+    .then((data) => {
+        res.render("lecturers", {"lectureList": data});
+    })
+    .catch((error) => {
+        res.send(error)
     })
 })
