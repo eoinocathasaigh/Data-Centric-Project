@@ -17,7 +17,6 @@ var findAll = function() {
     return new Promise((resolve, reject) => {
         coll.find().sort({_id:1}).toArray()
         .then((documents) => {
-            console.log("THEN => " + JSON.stringify(documents))
             resolve(documents)
     })
     .catch((error) => {

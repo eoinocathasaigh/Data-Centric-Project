@@ -32,6 +32,11 @@ app.get("/students", (req, res)=> {
     })
 })
 
+//Navigating to the section to add a new student
+app.get("/addStudent", (req,res)=>{
+    res.render("addStudent")
+})
+
 //Getting the grades of each student for this application
 app.get("/grades", (req, res)=> {
     mySqlDao.studentGrades()
@@ -54,5 +59,24 @@ app.get("/lecturers", (req,res)=>{
     })
     .catch((error) => {
         res.send(error)
+    })
+})
+
+//Adding a new Student
+//Handling sending data back to the database
+app.post('/addStudent', (req, res) => {
+    mySqlDao.addEmployee(req.body)
+    .then(() => {
+        res.redirect("/students")
+    })
+    .catch((error) =>{
+        console.log(JSON.stringify(error))
+        if(error.errorcode == 11000)
+        {
+            res.send("Error, Employee with ID: " + req.body._id + " already exists")
+        }
+        else{
+            res.send(error)
+        }
     })
 })
