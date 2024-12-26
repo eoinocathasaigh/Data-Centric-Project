@@ -1,0 +1,19 @@
+<h1>Students</h1>
+<a href="">Add Student</a></br>
+<a href="/">Home</a>
+<table style="border: 1px solid black;">
+    <tr>
+        <th style="border: 1px solid black;">ID</th>
+        <th style="border: 1px solid black;">Name</th>
+        <th style="border: 1px solid black;">Age</th>
+        <th style="border: 1px solid black;">Update</th>
+    </tr>
+    <% studentList.forEach((student) => { %>
+    <tr>
+        <td style="border: 1px solid black;"><%= student.sid %></td>
+        <td style="border: 1px solid black;"><%= student.name %></td>
+        <td style="border: 1px solid black;"><%= student.age %></td>
+        <td style="border: 1px solid black;"><a href="/students/delete/<%= student.student_id %>">Update</a></td>
+    </tr>
+    <% }) %>
+</table>
