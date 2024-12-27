@@ -19,6 +19,7 @@ pmysql.createPool({
         console.log("pool error:" + error)
     })
 
+//Getting & Displaying all the students
 var getStudents = function(){
     return new Promise((resolve, reject)=>{
         pool.query('SELECT * FROM student')
@@ -31,23 +32,6 @@ var getStudents = function(){
             reject(error)
         })
    })
-}
-
-//Deleting a student
-var deleteStudent = function(sid){
-    return new Promise((resolve, reject)=>{
-        var newQuery = {
-            sql: "DELETE FROM student_table where student_id = ?",
-            values: [sid]
-        }
-        pool.query(newQuery)
-        .then(()=>{
-            resolve()
-        })
-        .catch((error)=>{
-            reject(error)
-        })
-    })
 }
 
 //Adding the student to the database
@@ -73,7 +57,6 @@ var addStudent = function (newStudent) {
     });
 };
 
-
 //Getting the grades from each student
 var studentGrades = function(){
     return new Promise((resolve, reject)=>{
@@ -89,4 +72,35 @@ var studentGrades = function(){
         })
    })
 }
-module.exports = { getStudents, deleteStudent, studentGrades, addStudent }
+
+//Method for selecting a specific student based on their id
+var getStudentById = function(studentId) {
+    return new Promise((resolve, reject) => {
+        pool.query('SELECT * FROM student WHERE sid = ?', [studentId])
+        .then((data) => {
+            resolve(data[0]); // Return the first result
+        })
+        .catch((error) => {
+            reject(error);
+        });
+    });
+};
+
+//Actually editing the student
+var editStudent = function(studentId, updatedData) {
+    return new Promise((resolve, reject) => {
+        pool.query(
+            'UPDATE student SET name = ?, age = ? WHERE sid = ?', 
+            [updatedData.name, updatedData.age, studentId]
+        )
+        .then(() => {
+            console.log("Update successful for student:", studentId);
+            resolve();
+        })
+        .catch((error) => {
+            console.error("Database update error:", error); 
+            reject(error);
+        });
+    });
+};
+module.exports = { getStudents, studentGrades, addStudent, getStudentById, editStudent }

@@ -38,6 +38,23 @@ app.get("/student/add", (req,res)=>{
     res.render("addStudent", {"errors": undefined})
 })
 
+//Editing a student based on their id
+app.get('/students/edit/:id', (req, res, next) => {
+    const studentId = req.params.id;
+    mySqlDao.getStudentById(studentId)
+        .then((student) => {
+            if (student) {
+                res.render("editStudent", { student: student , errors: undefined});
+            } else {
+                res.status(404).send("Student not found");
+            }
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send("Error retrieving student details");
+        });
+});
+
 //Getting the grades of each student for this application
 app.get("/grades", (req, res)=> {
     mySqlDao.studentGrades()
@@ -101,6 +118,39 @@ app.post("/student/add",
 
                 // Render form with errors
                 res.render("addStudent", { errors });
+            });
+        }
+    }
+);
+
+//Post method for updating the students details
+app.post('/students/edit/:id',
+    [
+        check("name").isLength({ min: 2 }).withMessage("Student Name should be at least 2 characters"),
+        check("age").isFloat({ min: 18 }).withMessage("Student Age should be at least 18"),
+    ],
+    (req, res) => {
+        const studentId = req.params.id;
+        const { name, age } = req.body;
+        const updatedData = { name, age };
+
+        // Collect validation errors
+        const validationErrors = validationResult(req);
+        const errors = validationErrors.array();
+
+        if (errors.length > 0) {
+            // Render the form with errors and preserve the input data
+            res.render("editStudent", { student: { sid: studentId, name, age }, errors });
+            console.log("Validation Errors:", errors);
+        } else {
+            // Call the DAO to edit the student
+            mySqlDao.editStudent(studentId, updatedData)
+            .then(() => {
+                res.redirect('/students');
+            })
+            .catch((err) => {
+                console.error("Error updating student:", err);
+                res.status(500).send("Error updating student details");
             });
         }
     }
