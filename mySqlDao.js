@@ -103,4 +103,36 @@ var editStudent = function(studentId, updatedData) {
         });
     });
 };
-module.exports = { getStudents, studentGrades, addStudent, getStudentById, editStudent }
+
+//Getting all the modules
+var getAllModules = function() {
+    return new Promise((resolve, reject) => {
+        pool.query('SELECT * FROM module')
+        .then((data) => {
+            console.log("D="+ JSON.stringify(data))
+            resolve(data)
+        })
+        .catch((error) => {
+            console.log("E="+ JSON.stringify(error))
+            reject(error)
+        })
+    })
+}
+
+//Getting the modules based on the lecturer ID - Used for deleting a module
+//If we get a match then we return all the associated modules & prevent deletion
+var getModuleLecturer = function(lecturerId) {
+    return new Promise((resolve, reject) => {
+        pool.query('SELECT * FROM module WHERE lecturer = ?', [lecturerId])
+        .then((data) => {
+               resolve(data);
+        })
+        .catch((error) => {
+            console.error("Error fetching modules for lecturer:", error);
+            reject(error);
+        });
+    });
+};
+
+//Exporting all our methods so we can use them
+module.exports = { getStudents, studentGrades, addStudent, getStudentById, editStudent, getAllModules, getModuleLecturer }

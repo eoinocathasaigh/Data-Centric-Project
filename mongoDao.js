@@ -25,17 +25,14 @@ var findAll = function() {
     })
 })}
 
-var addEmployee = function(employee) {
-    return new Promise((resolve, reject) => {
-        coll.insertOne(employee)
-        .then(() => {
-            resolve()
-        })
-        .catch((error) => {
-            console.log(JSON.stringify(error))
-            reject(error)
-        })
-    })
-}    
+//Method for deleting the lecturer based on their unique id
+const deleteLecturer = async (lecturerId) => {
+    try {
+        const result = await coll.deleteOne({ _id: lecturerId }); // Delete lecturer by ID
+        return result; // Return the result of the deletion
+    } catch (error) {
+        throw new Error(`Error deleting lecturer: ${error.message}`);
+    }
+};
 
-module.exports = {findAll, addEmployee}
+module.exports = {findAll, deleteLecturer}
