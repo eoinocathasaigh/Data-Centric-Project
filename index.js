@@ -3,6 +3,7 @@ var app = express();
 var mySqlDao = require('./mySqlDao')
 var myMongoDao = require('./mongoDao')
 var bodyParser = require('body-parser')
+const { check, validationResult } = require('express-validator');
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: false}))
@@ -33,8 +34,8 @@ app.get("/students", (req, res)=> {
 })
 
 //Navigating to the section to add a new student
-app.get("/addStudent", (req,res)=>{
-    res.render("addStudent")
+app.get("/student/add", (req,res)=>{
+    res.render("addStudent", {"errors": undefined})
 })
 
 //Getting the grades of each student for this application
@@ -64,19 +65,43 @@ app.get("/lecturers", (req,res)=>{
 
 //Adding a new Student
 //Handling sending data back to the database
-app.post('/addStudent', (req, res) => {
-    mySqlDao.addEmployee(req.body)
-    .then(() => {
-        res.redirect("/students")
-    })
-    .catch((error) =>{
-        console.log(JSON.stringify(error))
-        if(error.errorcode == 11000)
-        {
-            res.send("Error, Employee with ID: " + req.body._id + " already exists")
+app.post("/student/add",
+    [
+        check("sid").isLength({ min: 4, max: 4 }).withMessage("Student ID must be exactly 4 characters"),
+        check("name").isLength({ min: 2 }).withMessage("Student Name should be at least 2 characters"),
+        check("age").isFloat({ min: 18 }).withMessage("Student Age should be at least 18"),
+    ],
+    (req, res) => {
+        const validationErrors = validationResult(req);
+
+        // Extract validation errors if any
+        const errors = validationErrors.array();
+
+        if (errors.length > 0) {
+            // Render form with errors
+            res.render("addStudent", { errors });
+            console.log("Validation Errors:", errors);
+        } else {
+            const { sid, name, age } = req.body;
+            const newStudent = { sid, name, age };
+
+            mySqlDao.addStudent(newStudent)
+            .then(() => {
+                res.redirect("/students");
+            })
+            .catch((error) => {
+                console.log("Database Error:", error);
+
+                if (error.message.includes("Duplicate Student ID")) {
+                    // Add custom error for duplicate Student ID
+                    errors.push({ msg: "Student ID already exists" });
+                } else {
+                    errors.push({ msg: "An unexpected error occurred" });
+                }
+
+                // Render form with errors
+                res.render("addStudent", { errors });
+            });
         }
-        else{
-            res.send(error)
-        }
-    })
-})
+    }
+);

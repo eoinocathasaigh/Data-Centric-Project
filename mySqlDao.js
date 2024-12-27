@@ -50,6 +50,30 @@ var deleteStudent = function(sid){
     })
 }
 
+//Adding the student to the database
+var addStudent = function (newStudent) {
+    return new Promise((resolve, reject) => {
+        pool.query(
+            "INSERT INTO student (sid, name, age) VALUES (?, ?, ?)",
+            [newStudent.sid, newStudent.name, newStudent.age]
+        )
+        .then(() => {
+            console.log("Student added successfully");
+            resolve();
+        })
+        .catch((error) => {
+            console.error("Database Insert Error:", error);
+
+            if (error.code === "ER_DUP_ENTRY") {
+                reject(new Error("Duplicate Student ID"));
+            } else {
+                reject(error);
+            }
+        });
+    });
+};
+
+
 //Getting the grades from each student
 var studentGrades = function(){
     return new Promise((resolve, reject)=>{
@@ -65,4 +89,4 @@ var studentGrades = function(){
         })
    })
 }
-module.exports = { getStudents, deleteStudent, studentGrades }
+module.exports = { getStudents, deleteStudent, studentGrades, addStudent }
