@@ -38,8 +38,8 @@ app.get("/student/add", (req,res)=>{
     res.render("addStudent", {"errors": undefined})
 })
 
-//Editing a student based on their id
-app.get('/students/edit/:id', (req, res, next) => {
+//Editing a student based on their id - sends their data to the specified page as well as any errors
+app.get('/students/edit/:id', (req, res) => {
     const studentId = req.params.id;
     mySqlDao.getStudentById(studentId)
     .then((student) => {
@@ -102,6 +102,7 @@ app.post("/student/add",
             const { sid, name, age } = req.body;
             const newStudent = { sid, name, age };
 
+            //If there are no errors we create the new student & redirect back to the students page
             mySqlDao.addStudent(newStudent)
             .then(() => {
                 res.redirect("/students");
@@ -123,7 +124,7 @@ app.post("/student/add",
     }
 );
 
-//Post method for updating the students details
+//Post method for updating the students details - initially checks to see if theres any errors
 app.post('/students/edit/:id',
     [
         check("name").isLength({ min: 2 }).withMessage("Student Name should be at least 2 characters"),
@@ -134,18 +135,19 @@ app.post('/students/edit/:id',
         const { name, age } = req.body;
         const updatedData = { name, age };
 
-        // Collect validation errors
+        //Collect validation errors & convert them to an array
         const validationErrors = validationResult(req);
         const errors = validationErrors.array();
 
         if (errors.length > 0) {
-            // Render the form with errors and preserve the input data
+            //Render the form with errors and preserve the input data
             res.render("editStudent", { student: { sid: studentId, name, age }, errors });
             console.log("Validation Errors:", errors);
         } else {
-            // Call the DAO to edit the student
+            //Call the DAO to edit the student
             mySqlDao.editStudent(studentId, updatedData)
             .then(() => {
+                //Then redirect them to the students page
                 res.redirect('/students');
             })
             .catch((err) => {
@@ -164,14 +166,17 @@ app.get('/lecturers/delete/:lid', (req, res) => {
     // Check if the lecturer has any associated modules
     mySqlDao.getModuleLecturer(lecturerId)
     .then((modules) => {
+
+        //Initial error checking
         if (modules.length > 0) {
-            // Lecturer has associated modules, redirect to the Delete page
+            //If the lecturer teaches a module then we redirect the user to the appropriate page to display the error
             res.render("deleteLecturer", { lecturerId: lecturerId, message: "This lecturer has associated modules and cannot be deleted." });
         } else {
-            // No associated modules, proceed with deletion logic
+            //If there are no errors we can then safely delete the lecturer
             myMongoDao.deleteLecturer(lecturerId)
             .then(() => {
-                res.redirect('/lecturers'); // Redirect to the lecturers page if deletion is successful
+                //Redirecting the user if the action is successful
+                res.redirect('/lecturers');
             })
             .catch((error) => {
                 console.error("Error deleting lecturer:", error);

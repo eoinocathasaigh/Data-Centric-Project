@@ -3,7 +3,6 @@ var pmysql = require("promise-mysql");
 var pool;
 
 //Creating a pool of connections for this program
-
 pmysql.createPool({
     connectionLimit : 1,
     host : 'localhost',
@@ -34,7 +33,7 @@ var getStudents = function(){
    })
 }
 
-//Adding the student to the database
+//Adding the student to the database with the specified details
 var addStudent = function (newStudent) {
     return new Promise((resolve, reject) => {
         pool.query(
@@ -73,12 +72,12 @@ var studentGrades = function(){
    })
 }
 
-//Method for selecting a specific student based on their id
+//Method for selecting a specific student based on their id - used for updating a specific student
 var getStudentById = function(studentId) {
     return new Promise((resolve, reject) => {
         pool.query('SELECT * FROM student WHERE sid = ?', [studentId])
         .then((data) => {
-            resolve(data[0]); // Return the first result
+            resolve(data[0]);
         })
         .catch((error) => {
             reject(error);
