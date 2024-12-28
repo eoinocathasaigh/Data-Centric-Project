@@ -60,8 +60,6 @@ app.get('/students/edit/:id', (req, res) => {
 app.get("/grades", (req, res)=> {
     mySqlDao.studentGrades()
     .then((data)=>{
-        console.log("THEN index.js")
-        //res.send(data);
         res.render("grades", {"gradeList": data});
     })
     .catch((error)=>{
