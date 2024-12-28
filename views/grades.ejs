@@ -1,17 +1,19 @@
 <!--Main Page for handling any and all grades for the students-->
-<h1>Grades</h1>
-<a href="/">Home</a>
-<table style="border: 1px solid black;">
-    <tr>
-        <th style="border: 1px solid black;">Student</th>
-        <th style="border: 1px solid black;">Module</th>
-        <th style="border: 1px solid black;">Grade</th>
-    </tr>
-    <% gradeList.forEach((student) => { %>
-    <tr>
-        <td style="border: 1px solid black;"><%= student.student_name %></td>
-        <td style="border: 1px solid black;"><%= student.student_module || '' %></td>
-        <td style="border: 1px solid black;"><%= student.student_grade || '' %></td>
-    </tr>
-    <% }) %>
-</table>
+<div style="text-align: center;">
+    <h1><u>Grades</u></h1>
+    <a href="/">Home</a>
+    <table style="border: 1px solid black; margin-left: auto; margin-right: auto;">
+        <tr>
+            <th style="border: 1px solid black;">Student</th>
+            <th style="border: 1px solid black;">Module</th>
+            <th style="border: 1px solid black;">Grade</th>
+        </tr>
+        <% gradeList.forEach((student) => { %>
+        <tr>
+            <td style="border: 1px solid black;"><%= student.student_name %></td>
+            <td style="border: 1px solid black;"><%= student.student_module || '' %></td>
+            <td style="border: 1px solid black;"><%= student.student_grade || '' %></td>
+        </tr>
+        <% }) %>
+    </table>
+</div>

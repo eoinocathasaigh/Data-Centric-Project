@@ -1,19 +1,21 @@
-<h1>Students</h1>
-<a href="student/add">Add Student</a></br>
-<a href="/">Home</a>
-<table style="border: 1px solid black;">
-    <tr>
-        <th style="border: 1px solid black;">ID</th>
-        <th style="border: 1px solid black;">Name</th>
-        <th style="border: 1px solid black;">Age</th>
-        <th style="border: 1px solid black;">Update</th>
-    </tr>
-    <% studentList.forEach((student) => { %>
-    <tr>
-        <td style="border: 1px solid black;"><%= student.sid %></td>
-        <td style="border: 1px solid black;"><%= student.name %></td>
-        <td style="border: 1px solid black;"><%= student.age %></td>
-        <td style="border: 1px solid black;"><a href="/students/edit/<%= student.sid %>">Update</a></td>
-    </tr>
-    <% }) %>
-</table>
+<div style="text-align: center;">
+    <h1><u>Students</u></h1>
+    <a href="student/add">Add Student</a></br>
+    <a href="/">Home</a>
+    <table style="border: 1px solid black; margin-left: auto; margin-right: auto;">
+        <tr>
+            <th style="border: 1px solid black;">ID</th>
+            <th style="border: 1px solid black;">Name</th>
+            <th style="border: 1px solid black;">Age</th>
+            <th style="border: 1px solid black;">Update</th>
+        </tr>
+        <% studentList.forEach((student) => { %>
+        <tr>
+            <td style="border: 1px solid black;"><%= student.sid %></td>
+            <td style="border: 1px solid black;"><%= student.name %></td>
+            <td style="border: 1px solid black;"><%= student.age %></td>
+            <td style="border: 1px solid black;"><a href="/students/edit/<%= student.sid %>">Update</a></td>
+        </tr>
+        <% }) %>
+    </table>
+</div>

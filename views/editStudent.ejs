@@ -1,28 +1,31 @@
 <body>
-    <p style="font-size: 20px;"><a href="/">Home</a></p>
-    <h1>Updating Student <%= student.sid %></h1>
+    <div style="text-align: center;">
+        <p style="font-size: 20px;"><a href="/">Home</a></p>
+        <h1><u>Updating Student: <%= student.sid %></u></h1>
 
-    <!--Displaying all the errors for editing the students-->
-    <% if (errors && errors.length > 0) { %>
-        <ul style="color: red;">
-            <% errors.forEach((error) => { %>
-                <li><%= error.msg %></li>
-            <% }); %>
-        </ul>
-    <% } %>
-
-    <!-- Form to Edit Student -->
-    <form action="/students/edit/<%= student.sid %>" method="POST">
-        <label for="sid">Student ID:</label>
-        <!--The id can be seen but not edited-->
-        <input type="text" id="sid" name="sid" value="<%= student.sid %>" readonly>
-        <br>
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" value="<%= student.name %>">
-        <br>
-        <label for="age">Age:</label>
-        <input type="number" id="age" name="age" value="<%= student.age %>">
-        <br>
-        <button type="submit">Update</button>
-    </form>
+        <!--Displaying all the errors for editing the students-->
+        <div style="border: 2px solid black; border-radius: 5px; margin-left: auto; margin-right: auto; max-width: fit-content; background-color: black; text-align: center;">
+            <% if (errors && errors.length > 0) { %>
+                <ul style="color: red;">
+                    <% errors.forEach((error) => { %>
+                        <li><%= error.msg %></li>
+                    <% }); %>
+                </ul>
+            <% } %>
+        </div>
+        <!-- Form to Edit Student -->
+        <form action="/students/edit/<%= student.sid %>" method="POST" style="border: 2px solid black; border-radius: 5px; margin-left: auto; margin-right: auto; max-width: fit-content; background-color: wheat;">
+            <label for="sid">Student ID:</label>
+            <!--The id can be seen but not edited-->
+            <input type="text" id="sid" name="sid" value="<%= student.sid %>" readonly>
+            <br>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" value="<%= student.name %>">
+            <br>
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" value="<%= student.age %>">
+            <br>
+            <button type="submit">Update</button>
+        </form>
+    </div>
 </body>

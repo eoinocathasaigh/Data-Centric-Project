@@ -1,22 +1,27 @@
 <body>
-    <h1>Add Student</h1>
-    <a href="/">Home</a>
-    <!--Displaying any and all errors that arise when entering data-->
-    <% if (errors && errors.length > 0) { %>
-        <ul style="color: red;">
-            <% errors.forEach((error) => { %>
-                <li><%= error.msg %></li>
-            <% }); %>
-        </ul>
-    <% } %>
-    <!--Displaying the actual form for entering a new students information-->
-    <form action="/student/add" method="POST">
-        <label>Student ID:</label>
-        <input type="text" name="sid" required><br>
-        <label>Student Name:</label>
-        <input type="text" name="name" required><br>
-        <label>Student Age:</label>
-        <input type="number" name="age" required><br>
-        <input type="submit" value="Add Student">
-    </form>
-</body>
+    <div style="text-align: center;">
+        <h1><u>Add Student</u></h1>
+        <a href="/">Home</a>
+        <!-- Displaying any and all errors that arise when entering data -->
+        <div style="border: 2px solid black; border-radius: 5px; margin-left: auto; margin-right: auto; max-width: fit-content; background-color: black; text-align: center;">
+        <% if (errors && errors.length > 0) { %>
+            <ul style="color: red;">
+                <% errors.forEach((error) => { %>
+                    <li><%= error.msg %></li>
+                <% }); %>
+            </ul>
+        <% } %>
+        </div>
+        <!-- Displaying the actual form for entering a new student's information -->
+        <form action="/student/add" method="POST" style="border: 2px solid black; border-radius: 5px; margin-left: auto; margin-right: auto; max-width: fit-content; background-color: wheat;">
+            <label>Student ID:</label><br>
+            <input type="text" name="sid" value="<%= inputData ? inputData.sid : '' %>" required><br>
+            <label>Student Name:</label><br>
+            <input type="text" name="name" value="<%= inputData ? inputData.name : '' %>" required><br>
+            <label>Student Age:</label><br>
+            <input type="number" name="age" value="<%= inputData ? inputData.age : '' %>" required><br>
+            <input type="submit" value="Add Student">
+        </form>
+    </div>
+    </body>
+    

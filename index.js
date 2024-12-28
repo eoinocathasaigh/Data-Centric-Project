@@ -7,6 +7,7 @@ const { check, validationResult } = require('express-validator');
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: false}))
+app.use(express.static('public'));
 
 //Making our app listen on port 3004
 //Listening for connections on a certain port
@@ -35,7 +36,7 @@ app.get("/students", (req, res)=> {
 
 //Navigating to the section to add a new student
 app.get("/student/add", (req,res)=>{
-    res.render("addStudent", {"errors": undefined})
+    res.render("addStudent", {"errors": undefined, "inputData": ""})
 })
 
 //Editing a student based on their id - sends their data to the specified page as well as any errors
@@ -93,16 +94,17 @@ app.post("/student/add",
 
         // Extract validation errors if any
         const errors = validationErrors.array();
+        const inputData = req.body; // Capture the user's input data
 
         if (errors.length > 0) {
-            // Render form with errors
-            res.render("addStudent", { errors });
+            // Render form with errors and input data
+            res.render("addStudent", { errors, inputData });
             console.log("Validation Errors:", errors);
         } else {
             const { sid, name, age } = req.body;
             const newStudent = { sid, name, age };
 
-            //If there are no errors we create the new student & redirect back to the students page
+            // If there are no errors we create the new student & redirect back to the students page
             mySqlDao.addStudent(newStudent)
             .then(() => {
                 res.redirect("/students");
@@ -117,8 +119,8 @@ app.post("/student/add",
                     errors.push({ msg: "An unexpected error occurred" });
                 }
 
-                // Render form with errors
-                res.render("addStudent", { errors });
+                // Render form with errors and input data
+                res.render("addStudent", { errors, inputData });
             });
         }
     }
