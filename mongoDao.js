@@ -2,7 +2,7 @@ const { json } = require('express')
 
 const MongoClient = require('mongodb').MongoClient
 
-//Connecting to the mongodb database
+//Connecting to the mongodb database & selecting what specific collection we want to use
 MongoClient.connect('mongodb://127.0.0.1:27017')
 .then((client) => {
     db = client.db('proj2024MongoDB')
@@ -19,11 +19,11 @@ var findAll = function() {
         coll.find().sort({_id:1}).toArray()
         .then((documents) => {
             resolve(documents)
-    })
-    .catch((error) => {
-        console.log("CATCH => " + JSON.stringify(error))
-        reject(error)
-    })
+        })
+        .catch((error) => {
+            console.log("CATCH => " + JSON.stringify(error))
+            reject(error)
+        })
 })}
 
 //Method for deleting the lecturer based on their unique id
